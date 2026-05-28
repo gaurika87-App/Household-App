@@ -38,17 +38,19 @@ export default function Home() {
     },
   };
 const addGrocery = () => {
-  if (!groceryItem) return;
+  if (!groceryItem.trim()) return;
 
-  setTasks([
-    ...tasks,
-    {
-      id: Date.now(),
-      title: groceryItem,
-      done: false,
-      category: "to_buy",
-      type: "grocery",
-    },
+  const newTask = {
+    id: Date.now(),
+    title: groceryItem,
+    category: "to_buy",
+    done: false,
+    type: "grocery",
+  };
+
+  setTasks((prevTasks) => [
+    ...prevTasks,
+    newTask,
   ]);
 
   setGroceryItem("");
@@ -183,7 +185,7 @@ const deleteGrocery = (index) => {
           <button
             onClick={addTask}
             style={{
-              background: "black",
+              background: "white",
               color: "black",
               border: "none",
               padding: "12px 18px",
@@ -219,9 +221,83 @@ const deleteGrocery = (index) => {
 
               {cat === "to_buy" && (
   <>
-    <h3 style={{ marginTop: "15px" }}>
-      🛒 Grocery
-    </h3>
+    {/* Grocery Quick Add */}
+    <div
+      style={{
+        background: "#ecfccb",
+        padding: "12px",
+        borderRadius: "12px",
+        marginBottom: "20px",
+        border: "1px solid #bef264",
+      }}
+    >
+      <div
+        style={{
+          fontWeight: "bold",
+          marginBottom: "10px",
+          color: "#166534",
+        }}
+      >
+        🛒 Grocery Quick Add
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+           flexWrap: "wrap",
+           alignItems: "center",
+        }}
+      >
+        <input
+          value={groceryItem}
+          onChange={(e) =>
+            setGroceryItem(e.target.value)
+          }
+          placeholder="Add grocery item"
+          style={{
+            flex: 1,
+            padding: "10px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            background: "white",
+            color: "black",
+          }}
+        />
+
+        <button
+          onClick={addGrocery}
+          style={{
+  background: "#65a30d",
+  color: "white",
+  border: "none",
+  padding: "6px 10px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  fontSize: "12px",
+  minWidth: "90px",
+  height: "36px",
+}}
+        >
+          + Grocery
+        </button>
+      </div>
+    </div>
+
+    {/* Grocery Items Section */}
+    <div
+      style={{
+        background: "#dcfce7",
+        padding: "8px 12px",
+        borderRadius: "10px",
+        marginBottom: "10px",
+        fontWeight: "bold",
+        color: "#166534",
+      }}
+    >
+      🛒 Grocery Items
+    </div>
 
     {tasks
       .filter(
@@ -233,14 +309,14 @@ const deleteGrocery = (index) => {
         <div
           key={t.id}
           style={{
-            background: "#dcfce7",
+            background: "white",
             color: "black",
             padding: "12px",
             borderRadius: "12px",
             marginBottom: "10px",
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <div
@@ -280,18 +356,34 @@ const deleteGrocery = (index) => {
         </div>
       ))}
 
-    <h3 style={{ marginTop: "20px" }}>
-      📦 Other Items
-    </h3>
+    {/* Other Buy Items */}
+    <div
+      style={{
+        background: "#e0f2fe",
+        padding: "8px 12px",
+        borderRadius: "10px",
+        marginTop: "20px",
+        marginBottom: "10px",
+        fontWeight: "bold",
+        color: "#075985",
+      }}
+    >
+      📦 Other Buy Items
+    </div>
   </>
 )}
 
 {tasks
-  .filter(
-    (t) =>
-      t.category === cat &&
-      t.type !== "grocery"
-  )
+  .filter((t) => {
+  if (cat !== "to_buy") {
+    return t.category === cat;
+  }
+
+  return (
+    t.category === "to_buy" &&
+    t.type !== "grocery"
+  );
+})
   .map((t) => (
     <div
       key={t.id}
@@ -352,30 +444,6 @@ const deleteGrocery = (index) => {
       flexWrap: "wrap",
     }}
   >
-    <input
-      value={groceryItem}
-      onChange={(e) => setGroceryItem(e.target.value)}
-      placeholder="Add grocery item"
-      style={{
-        flex: 1,
-        padding: "12px",
-        borderRadius: "10px",
-        border: "1px solid #ccc",
-      }}
-    />
-
-    <button
-      onClick={addGrocery}
-      style={{
-        background: "green",
-        color: "white",
-        border: "none",
-        padding: "12px 18px",
-        borderRadius: "10px",
-      }}
-    >
-      Add Item
-    </button>
   </div>
 </div>
         </div>
